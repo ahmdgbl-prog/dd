@@ -34,7 +34,7 @@
             min-height: 100vh; 
             min-height: 100dvh;
             margin: 0; 
-            padding: 8px; 
+            padding: 6px; 
             overflow: hidden; 
         }
         
@@ -42,7 +42,7 @@
             width: 100%; 
             max-width: 520px; 
             background: #ffffff; 
-            padding: 20px 15px; 
+            padding: 15px 12px; 
             border-radius: 30px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
             text-align: center; 
@@ -51,8 +51,8 @@
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
-            height: 96vh; 
-            height: 96dvh;
+            height: 97vh; 
+            height: 97dvh;
             overflow: hidden; 
         }
 
@@ -89,7 +89,7 @@
         .wm-left { left: 2px; } .wm-right { right: 2px; }
         .wm-text { transform: rotate(-90deg); white-space: nowrap; margin: 20px 0; }
 
-        .quiz-content { position: relative; z-index: 3; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+        .quiz-content { position: relative; z-index: 3; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
 
         #welcome-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; }
 
@@ -110,12 +110,13 @@
             border: 2px dashed var(--gold-primary);
             color: #795548;
             padding: 6px 12px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             border-radius: 12px;
-            margin: 4px auto;
+            margin: 2px auto 6px auto;
             width: fit-content;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            white-space: nowrap;
         }
 
         .math-horizontal-layout {
@@ -123,9 +124,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin: auto;
             width: 100%;
+            overflow: hidden;
+        }
+
+        .scrollable-math-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 5px 0;
+            display: flex;
+            justify-content: center;
         }
 
         .input-row-display {
@@ -133,10 +143,10 @@
             align-items: center;
             justify-content: center;
             gap: clamp(8px, 3vw, 16px);
-            font-size: clamp(1.8rem, 6vw, 2.6rem);
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
             font-weight: 900;
             color: var(--primary);
-            direction: rtl; 
+            direction: ltr; 
         }
 
         .mixed-number-box {
@@ -144,13 +154,12 @@
             flex-direction: row; 
             align-items: center;
             gap: 6px;
-            direction: ltr; 
+            direction: ltr;
         }
 
         .m-whole { 
             font-size: clamp(2.2rem, 7vw, 3.2rem); 
             font-weight: 900;
-            order: 1; 
         }
 
         .fraction-box {
@@ -160,7 +169,6 @@
             justify-content: center;
             font-size: clamp(1.3rem, 4.5vw, 1.8rem);
             line-height: 1;
-            order: 2; 
         }
         
         .m-factor1 { color: var(--factor1-color); }
@@ -186,33 +194,35 @@
             justify-content: center;
             gap: 10px;
             background: #f8f9fa;
-            padding: 12px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
             border: 2px dashed #dcdde1;
-            min-height: 95px;
+            min-height: 85px;
+            direction: rtl;
         }
 
         .output-label {
             font-size: 1.2rem;
             font-weight: 900;
             color: var(--gold-dark);
-            margin-right: 5px;
+            margin-left: 5px;
         }
 
         .answer-container {
             display: flex;
-            flex-direction: row-reverse; 
+            flex-direction: row; 
             align-items: center;
             gap: 8px;
+            direction: ltr;
         }
 
         .input-box-field {
-            width: 55px;
-            height: 55px;
+            width: 52px;
+            height: 52px;
             border: 3.5px solid var(--primary);
             border-radius: 12px;
             text-align: center;
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: 900;
             color: var(--primary);
             background: white;
@@ -225,9 +235,9 @@
         }
 
         .input-box-field.whole-field {
-            width: 65px;
-            height: 65px;
-            font-size: 2rem;
+            width: 62px;
+            height: 62px;
+            font-size: 1.9rem;
         }
 
         .fraction-input-group {
@@ -239,7 +249,7 @@
         }
 
         .frac-input-line {
-            width: 55px;
+            width: 52px;
             height: 4px;
             background-color: var(--primary);
             border-radius: 2px;
@@ -251,34 +261,33 @@
         .custom-keyboard {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 5px auto 0 auto;
+            gap: 6px;
+            margin: 4px auto 0 auto;
             max-width: 320px;
             width: 100%;
             direction: ltr;
         }
 
         .key-btn {
-            background: var(--primary); color: white; font-size: 1.6rem; font-weight: bold;
-            border: none; border-radius: 12px; padding: 10px 0; cursor: pointer;
+            background: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;
+            border: none; border-radius: 11px; padding: 10px 0; cursor: pointer;
             box-shadow: 0 4px 0 #1a252f;
             display: flex; align-items: center; justify-content: center;
         }
         .key-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1a252f; }
-        .key-decimal { background: #34495e; font-size: 1.3rem; }
-        .key-delete { background: var(--error); box-shadow: 0 4px 0 #c0392b; font-size: 1.3rem; }
+        .key-decimal { background: #34495e; font-size: 1.2rem; }
+        .key-delete { background: var(--error); box-shadow: 0 4px 0 #c0392b; font-size: 1.2rem; }
         
         .key-submit { 
             background: var(--success); 
             box-shadow: 0 4px 0 #1e7e34; 
             font-size: 1.3rem;
             grid-column: 1 / span 3;
-            height: 48px;
+            height: 44px;
             margin-top: 2px;
         }
         .key-submit:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e7e34; }
 
-        /* تنسيقات صفحة الشرح التفصيلية المحدثة لضبط اتجاه الأعداد الكسرية */
         #explanation-screen {
             display: flex;
             flex-direction: column;
@@ -286,16 +295,16 @@
             justify-content: flex-start;
             height: 100%;
             width: 100%;
-            overflow-y: auto;
-            padding: 5px 10px;
+            overflow: hidden;
+            padding: 2px 4px;
             z-index: 10;
         }
 
         .exp-header {
             color: var(--error);
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 900;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -303,29 +312,31 @@
 
         .exp-scroll-area {
             width: 100%;
+            flex: 1;
             background: #fdfefe;
             border: 2px dashed var(--gold-primary);
             border-radius: 16px;
-            padding: 14px 12px;
+            padding: 12px;
             text-align: right;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            overflow-y: auto;
         }
 
         .exp-step {
-            margin-bottom: 14px;
-            font-size: 1.05rem;
+            margin-bottom: 12px;
+            font-size: 1rem;
             line-height: 1.6;
             color: #34495e;
             border-bottom: 1px dashed #eaeded;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         .exp-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
         .exp-step-title {
             font-weight: 900;
             color: var(--primary);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: block;
         }
 
@@ -345,61 +356,62 @@
             margin: 3px 0;
         }
 
-        /* ضمان بقاء العدد الصحيح على يسار الكسر رياضياً وبصرياً داخل الشرح */
+        /* تعديل جوهري: إلزام العدد الصحيح بالظهور على اليسار تماماً داخل الشرح */
         .inline-mixed {
             display: inline-flex;
             flex-direction: row;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-weight: bold;
             direction: ltr; 
-        }
-        .inline-mixed .f-whole-part {
-            order: 1; 
-        }
-        .inline-mixed .f-frac-part {
-            order: 2; 
         }
 
         .highlight-text {
             font-weight: bold;
-            color: #2c3e50;
+            color: #16a085;
+        }
+        .alert-text {
+            color: var(--error);
+            font-weight: bold;
         }
 
         .understand-btn {
             background: var(--success);
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: bold;
             border: none;
             border-radius: 16px;
             width: 100%;
             max-width: 280px;
-            padding: 12px 0;
+            padding: 10px 0;
             cursor: pointer;
             box-shadow: 0 4px 0 #1e7e34;
             transition: all 0.1s ease;
+            flex-shrink: 0;
         }
         .understand-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e7e34; }
 
         #report { padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
-        .final-score-val { font-size: 4rem; font-weight: 900; margin: 10px 0; }
-        .restart-btn { width: 100%; max-width: 300px; padding: 15px; font-size: 1.3rem; font-weight: bold; background: var(--primary); color: white; border: none; border-radius: 18px; cursor: pointer; }
+        .final-score-val { font-size: 3.5rem; font-weight: 900; margin: 8px 0; }
+        .restart-btn { width: 100%; max-width: 300px; padding: 12px; font-size: 1.2rem; font-weight: bold; background: var(--primary); color: white; border: none; border-radius: 18px; cursor: pointer; }
 
         @media (max-height: 670px) {
-            .app-container { padding: 12px 10px; border-width: 5px; }
-            .skill-subtitle { margin-bottom: 15px; }
-            .style-card { padding: 14px 10px; }
-            .math-horizontal-layout { gap: 8px; }
-            .output-row-display { padding: 6px 12px; min-height: 75px; }
-            .input-box-field { width: 44px; height: 44px; font-size: 1.3rem; border-width: 2.5px; border-radius: 8px; }
-            .input-box-field.whole-field { width: 52px; height: 52px; font-size: 1.6rem; }
-            .frac-input-line { width: 44px; }
-            .custom-keyboard { gap: 6px; max-width: 270px; }
-            .key-btn { padding: 6px 0; font-size: 1.4rem; border-radius: 8px; }
-            .key-submit { height: 40px; font-size: 1.1rem; }
-            .notebook-note { font-size: 0.85rem; padding: 4px 10px; }
-            .exp-step { font-size: 0.95rem; margin-bottom: 8px; }
+            .app-container { padding: 10px 8px; border-width: 5px; height: 98vh; height: 98dvh; }
+            .skill-subtitle { margin-bottom: 12px; }
+            .style-card { padding: 12px 8px; }
+            .math-horizontal-layout { gap: 6px; }
+            .output-row-display { padding: 4px 10px; min-height: 70px; }
+            .input-box-field { width: 42px; height: 42px; font-size: 1.25rem; border-width: 2.5px; border-radius: 8px; }
+            .input-box-field.whole-field { width: 50px; height: 50px; font-size: 1.5rem; }
+            .frac-input-line { width: 42px; }
+            .custom-keyboard { gap: 4px; max-width: 260px; }
+            .key-btn { padding: 6px 0; font-size: 1.3rem; border-radius: 8px; box-shadow: 0 3px 0 #1a252f; }
+            .key-submit { height: 36px; font-size: 1.1rem; }
+            .notebook-note { font-size: 0.8rem; padding: 4px 8px; margin-bottom: 2px; }
+            .exp-step { font-size: 0.9rem; margin-bottom: 6px; padding-bottom: 6px; }
+            .exp-header { font-size: 1.15rem; margin-bottom: 4px; }
+            .understand-btn { padding: 8px 0; font-size: 1.15rem; }
         }
     </style>
 </head>
@@ -423,10 +435,10 @@
                 
                 <div class="style-cards">
                     <div class="style-card" onclick="selectStyleAndStart('hindi')">
-                        <span class="card-text">أرقام هندية المناهج العربية (١/٤  ٢)</span>
+                        <span class="card-text">أرقام هندية المناهج العربية (٢  ١/٤)</span>
                     </div>
                     <div class="style-card" onclick="selectStyleAndStart('arabic')">
-                        <span class="card-text">أرقام عربية للمدارس الدولية (1/4  2)</span>
+                        <span class="card-text">أرقام عربية للمدارس الدولية (2  1/4)</span>
                     </div>
                 </div>
             </div>
@@ -443,28 +455,30 @@
                 </div>
 
                 <div class="math-horizontal-layout">
-                    <div class="input-row-display">
-                        <div class="mixed-number-box m-factor1">
-                            <div class="fraction-box">
-                                <span id="m1-num">1</span>
-                                <div class="fraction-line"></div>
-                                <span id="m1-den">2</span>
+                    <div class="scrollable-math-wrapper">
+                        <div class="input-row-display">
+                            <div class="mixed-number-box m-factor1">
+                                <span class="m-whole" id="m1-whole">1</span>
+                                <div class="fraction-box">
+                                    <span id="m1-num">1</span>
+                                    <div class="fraction-line"></div>
+                                    <span id="m1-den">2</span>
+                                </div>
                             </div>
-                            <span class="m-whole" id="m1-whole">1</span>
-                        </div>
 
-                        <span class="math-sign">×</span>
+                            <span class="math-sign">×</span>
 
-                        <div class="mixed-number-box m-factor2">
-                            <div class="fraction-box">
-                                <span id="m2-num">1</span>
-                                <div class="fraction-line"></div>
-                                <span id="m2-den">3</span>
+                            <div class="mixed-number-box m-factor2">
+                                <span class="m-whole" id="m2-whole">1</span>
+                                <div class="fraction-box">
+                                    <span id="m2-num">1</span>
+                                    <div class="fraction-line"></div>
+                                    <span id="m2-den">3</span>
+                                </div>
                             </div>
-                            <span class="m-whole" id="m2-whole">1</span>
-                        </div>
 
-                        <span class="math-sign">=</span>
+                            <span class="math-sign">=</span>
+                        </div>
                     </div>
                     
                     <div class="output-row-display">
@@ -480,8 +494,6 @@
                         <span class="output-label">:الناتج</span>
                     </div>
                 </div>
-
-                <div style="min-height: 10px;"></div>
 
                 <div class="custom-keyboard" id="keyboard">
                     <button class="key-btn num-key" onclick="handleKeyPress(1)">1</button>
@@ -672,9 +684,10 @@
             return `<span class="inline-fraction"><span>${formatPlainNum(num)}</span><div class="f-line"></div><span>${formatPlainNum(den)}</span></span>`;
         }
 
+        // دالة تضمن أن يكون العدد الصحيح على يسار الكسر تماماً في المتصفح والآيفون
         function createHTMLMixed(whole, num, den) {
-            if (num === 0) return `<span class="inline-mixed"><span class="f-whole-part">${formatPlainNum(whole)}</span></span>`;
-            return `<span class="inline-mixed"><span class="f-frac-part">${createHTMLFraction(num, den)}</span><span class="f-whole-part">${formatPlainNum(whole)}</span></span>`;
+            if (num === 0) return `<span class="inline-mixed">${formatPlainNum(whole)}</span>`;
+            return `<span class="inline-mixed"><span>${formatPlainNum(whole)}</span>${createHTMLFraction(num, den)}</span>`;
         }
 
         function updateKeyboardStyle() {
@@ -757,7 +770,7 @@
         function buildAndShowExplanation(q) {
             let html = "";
             
-            // الخطوة 1: تحويل الأعداد الكسرية لكسور (العدد يظهر يسار الكسر دائماً)
+            // الخطوة 1: تحويل الأعداد الكسرية لكسور
             html += `
                 <div class="exp-step">
                     <span class="exp-step-title">الخطوة ١: تحويل الأعداد الكسرية إلى كسور (بسط ومقام)</span>
@@ -766,7 +779,7 @@
                 </div>
             `;
 
-            // الخطوة 2: الضرب المباشر (تطهير النجوم)
+            // الخطوة 2: الضرب المباشر
             html += `
                 <div class="exp-step">
                     <span class="exp-step-title">الخطوة ٢: نضرب البسط في البسط والمقام في المقام</span>
@@ -776,15 +789,15 @@
                 </div>
             `;
 
-            // الخطوة 3: التبسيط وقسمة القواسم المشتركة إن وجدت
+            // الخطوة 3: التبسيط وقسمة القواسم المشتركة
             if (q.reductionGcd > 1) {
                 html += `
                     <div class="exp-step">
-                        <span class="exp-step-title">الخطوة ٣: التبسيط بالقسمة على القاسم المشترك الأكبر (${formatPlainNum(q.reductionGcd)})</span>
-                        نقسم البسط والمقام على (${formatPlainNum(q.reductionGcd)}) لتبسيط الكسر: <br>
+                        <span class="exp-step-title">الخطوة ٣: التبسيط بقسمة البسط والمقام على القاسم المشترك الأكبر (${formatPlainNum(q.reductionGcd)})</span>
+                        نقسم طرفي الكسر على الرقم المشترك لتبسيطه: <br>
                         ${formatPlainNum(q.rawN)} ÷ ${formatPlainNum(q.reductionGcd)} = <span class="highlight-text">${formatPlainNum(q.reducedN)}</span> <br>
                         ${formatPlainNum(q.rawD)} ÷ ${formatPlainNum(q.reductionGcd)} = <span class="highlight-text">${formatPlainNum(q.reducedD)}</span> <br>
-                        الكسر المبسط يصبح: ${createHTMLFraction(q.reducedN, q.reducedD)}
+                        الكسر المبسط الناتج هو: ${createHTMLFraction(q.reducedN, q.reducedD)}
                     </div>
                 `;
             } else {
@@ -796,27 +809,28 @@
                 `;
             }
 
-            // الخطوة الكسر غير الفعلي إلى عدد كسرى
+            // الخطوة 4: التذكير والتحويل الصارم إذا كان البسط أكبر من المقام (كسر غير فعلي)
             if (q.reducedN > q.reducedD && !q.isWholeResult) {
                 html += `
                     <div class="exp-step">
-                        <span class="exp-step-title">الخطوة ٤: تحويل الكسر غير الفعلي إلى عدد كسري</span>
-                        بما أن البسط أكبر من المقام، فالكسر هو كسر غير فعلي، نقوم بقسمة ${formatPlainNum(q.reducedN)} على ${formatPlainNum(q.reducedD)}: <br>
-                        الناتج الصحيح = <span class="highlight-text">${formatPlainNum(q.correctWhole)}</span> والباقي = <span class="highlight-text">${formatPlainNum(q.correctNum)}</span> <br>
-                        يكتب في صورة عدد وبسط ومقام: ${createHTMLMixed(q.correctWhole, q.correctNum, q.correctDen)}
+                        <span class="exp-step-title alert-text">⚠️ تذكير هام جداً للطالب:</span>
+                        الكسر الناتج ${createHTMLFraction(q.reducedN, q.reducedD)} هو <span class="alert-text">كسر غير فعلي</span> لأن بسطه أكبر من مقامه، ويجب كتابته في صورة عدد كسري. <br>
+                        نقوم بقسمة ${formatPlainNum(q.reducedN)} على ${formatPlainNum(q.reducedD)}: <br>
+                        الناتج الصحيح = <span class="highlight-text">${formatPlainNum(q.correctWhole)}</span> والباقي (البسط الجديد) = <span class="highlight-text">${formatPlainNum(q.correctNum)}</span> <br>
+                        العدد الكسري الصحيح يصبح: ${createHTMLMixed(q.correctWhole, q.correctNum, q.correctDen)}
                     </div>
                 `;
             }
 
-            // العرض النهائي للمقارنة التعليمية المضمونة
+            // الإخراج الختامي المقارن والمطابق تماماً لشاشات الهواتف
             let finalRepresentation = q.isWholeResult ? 
                 `<strong>${formatPlainNum(q.correctWhole)}</strong> (عدد صحيح)` : 
                 `${createHTMLMixed(q.correctWhole, q.correctNum, q.correctDen)}`;
 
             html += `
-                <div class="exp-step" style="background: #fdfefe; border: 2px solid var(--success); padding: 10px; border-radius: 12px;">
-                    <span class="exp-step-title" style="color: var(--success);">الناتج النهائي في أبسط صورة (العدد يسار الكسر):</span>
-                    الجواب الدقيق المعتمد هو: ${finalRepresentation}
+                <div class="exp-step" style="background: #e8f5e9; border: 2px solid var(--success); padding: 10px; border-radius: 12px; margin-top: 5px;">
+                    <span class="exp-step-title" style="color: var(--success);">الناتج النهائي الصحيح في أبسط صورة (العدد على يسار الكسر):</span>
+                    الإجابة المعتمدة والمطلوبة هي: ${finalRepresentation}
                 </div>
             `;
 

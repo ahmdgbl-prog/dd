@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>منصة الأستاذ أحمد أبو جبل التعليمية - جمع الأعداد العشرية</title>
+    <style>
+        :root { 
+            --sand-bg: #F5F5DC; 
+            --gold-primary: #d4af37;
+            --gold-dark: #aa841b;
+            --primary: #2c3e50; 
+            --error: #e74c3c; 
+            --success: #27ae60; 
+            --factor1-color: #2980b9; 
+            --factor2-color: #e67e22; 
+            --gold-wm: rgba(212, 175, 55, 0.25); 
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--sand-bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            min-height: 100dvh;
+            margin: 0; 
+            padding: 10px; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
+        }
+        
+        .app-container { 
+            width: 100%; 
+            max-width: 550px; 
+            background: white; 
+            padding: 25px 20px; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+            text-align: center; 
+            border: 8px solid var(--primary); 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start;
+            height: auto; 
+            max-height: 96vh; 
+            max-height: 96dvh;
+            overflow-y: auto; 
+        }
+
+        .islamic-pattern {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle, rgba(212,175,55,0.04) 2px, transparent 4px);
+            background-size: 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .blinking-watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.3rem; font-weight: 900;
+            color: rgba(212, 175, 55, 0.07);
+            white-space: nowrap; z-index: 1; pointer-events: none;
+            animation: slowBlink 5s infinite ease-in-out;
+        }
+
+        @keyframes slowBlink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .side-watermark {
+            position: absolute; top: 0; bottom: 0; width: 40px;
+            display: flex; flex-direction: column; justify-content: space-around;
+            align-items: center; font-size: 1.1rem; font-weight: 900; 
+            color: var(--gold-wm); pointer-events: none; z-index: 1;
+        }
+        .wm-left { left: 5px; } .wm-right { right: 5px; }
+        .wm-text { transform: rotate(-90deg); white-space: nowrap; margin: 15px 0; }
+
+        .quiz-content { position: relative; z-index: 3; width: 100%; display: flex; flex-direction: column; }
+
+        #welcome-screen { display: flex; flex-direction: column; align-items: center; padding: 10px; }
+
+        .skill-title { color: var(--primary); font-size: 2.2rem; font-weight: 900; margin-bottom: 5px; }
+        .skill-subtitle { color: var(--gold-dark); font-size: 1.4rem; font-weight: bold; margin-bottom: 30px; }
+
+        .style-cards { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 340px; margin-bottom: 30px; }
+        .style-card { background: #fff; border: 3px solid #e0e0e0; border-radius: 20px; padding: 15px 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        .style-card.selected { border-color: var(--primary); background: #f0f4f8; }
+        .card-text { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+
+        .start-btn {
+            width: 100%; max-width: 340px; background: linear-gradient(135deg, var(--primary), #34495e);
+            color: white; font-size: 1.6rem; font-weight: bold; padding: 16px; border: none; border-radius: 50px; cursor: pointer;
+        }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; width: 100%; }
+        #progress { font-size: 1.3rem; font-weight: bold; color: #7f8c8d; }
+        .nav-action-btn { background: #fff; border: 2px solid var(--gold-primary); color: var(--gold-dark); padding: 6px 14px; font-size: 0.95rem; font-weight: bold; border-radius: 30px; cursor: pointer; }
+
+        /* 📋 ملحوظة الدفتر التربوية */
+        .notebook-note {
+            background-color: #fffde7;
+            border: 2px dashed var(--gold-primary);
+            color: #795548;
+            padding: 8px 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            margin: 0 auto 15px auto;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        /* 📊 شبكة المحاذاة الرأسية المنفصلة */
+        .math-vertical-container {
+            margin: 10px auto;
+            display: grid;
+            grid-template-columns: 50px 45px 45px 25px 45px 45px;
+            align-items: center;
+            justify-content: center;
+            font-variant-numeric: tabular-nums;
+            direction: ltr;
+        }
+
+        .grid-cell {
+            font-size: clamp(2.6rem, 8vw, 3.8rem);
+            font-weight: 900;
+            text-align: center;
+            height: 60px;
+            line-height: 60px;
+        }
+        
+        .f1-cell { color: var(--factor1-color); }
+        .f2-cell { color: var(--factor2-color); }
+        .sign-cell { color: var(--primary); font-weight: bold; font-size: 3rem; }
+        .decimal-cell { color: var(--gold-dark); font-weight: 900; }
+        
+        .ghost-zero { opacity: 0.25; color: #7f8c8d; }
+
+        .v-grid-line { 
+            grid-column: 1 / span 6; 
+            border-top: 6px solid var(--primary); 
+            margin: 10px 0; 
+            border-radius: 5px;
+        }
+        
+        .input-grid-row { 
+            grid-column: 1 / span 6; 
+            display: flex; 
+            justify-content: center; 
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .digit-input { 
+            width: 100%; 
+            max-width: 240px;
+            height: clamp(60px, 14vw, 80px); 
+            font-size: clamp(2.2rem, 9vw, 3rem); 
+            font-weight: 900; 
+            text-align: center; 
+            border: 4px solid var(--primary); 
+            border-radius: 18px; 
+            outline: none; 
+            background: #fff; 
+            color: var(--primary);
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+
+        .correct-box { background: #e8f5e9 !important; border-color: var(--success) !important; color: var(--success) !important; }
+        .wrong-box { background: #ffebee !important; border-color: var(--error) !important; color: var(--error) !important; }
+
+        .custom-keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px auto 0 auto;
+            max-width: 320px;
+            width: 100%;
+            direction: ltr;
+        }
+
+        .key-btn {
+            background: var(--primary); color: white; font-size: 1.8rem; font-weight: bold;
+            border: none; border-radius: 12px; padding: 12px 0; cursor: pointer;
+            box-shadow: 0 4px 0 #1a252f;
+        }
+        .key-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #1a252f; }
+        .key-decimal { background: #34495e; font-size: 2rem; }
+        .key-delete { background: var(--error); box-shadow: 0 4px 0 #c0392b; font-size: 1.4rem; }
+        
+        .key-submit { 
+            background: var(--success); 
+            box-shadow: 0 4px 0 #1e7e34; 
+            font-size: 1.4rem;
+        }
+        .key-submit:active { background: #2ecc71; box-shadow: 0 0 0 #1e7e34; }
+
+        .error-hint { color: var(--error); font-size: 1.2rem; font-weight: bold; display: block; margin: 8px 0; }
+        #hint-area { min-height: 45px; display: flex; flex-direction: column; align-items: center; }
+
+        .continue-btn {
+            background: var(--success); color: white; border: none; padding: 10px 24px;
+            font-size: 1.2rem; font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 4px 0 #1e7e34; animation: pulseBtn 1.5s infinite;
+        }
+
+        #report { padding: 20px; }
+        .final-score-val { font-size: 4.5rem; font-weight: 900; margin: 15px 0; }
+        .restart-btn { width: 100%; padding: 18px; font-size: 1.5rem; font-weight: bold; background: var(--primary); color: white; border: none; border-radius: 20px; cursor: pointer; }
+
+        @media (max-width: 600px) {
+            .app-container { padding: 15px 10px; border-width: 5px; }
+            .math-vertical-container { grid-template-columns: 35px 32px 32px 20px 32px 32px; margin: 10px auto; }
+            .grid-cell { font-size: 2.2rem; height: 45px; line-height: 45px; }
+            .digit-input { height: 60px; font-size: 1.9rem; max-width: 200px; }
+            .custom-keyboard { gap: 8px; max-width: 290px; }
+            .key-btn { padding: 10px 0; font-size: 1.6rem; }
+            .skill-title { font-size: 1.7rem; }
+            .skill-subtitle { font-size: 1.1rem; }
+            .notebook-note { font-size: 0.95rem; padding: 6px 12px; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="islamic-pattern"></div>
+        <div class="blinking-watermark">أحمد فتحي أبو جبل</div>
+
+        <div class="side-watermark wm-left">
+            <div class="wm-text">أحمد فتحي أبو جبل</div><div class="wm-text">أحمد فتحي أبو جبل</div>
+        </div>
+        <div class="side-watermark wm-right">
+            <div class="wm-text">أحمد فتحي أبو جبل</div><div class="wm-text">أحمد فتحي أبو جبل</div>
+        </div>
+
+        <div class="quiz-content">
+            <div id="welcome-screen">
+                <div class="skill-title">جمع الأعداد العشرية</div>
+                <div class="skill-subtitle">منصة الأستاذ أحمد أبو جبل التعليمية</div>
+                
+                <div class="style-cards">
+                    <div class="style-card selected" id="opt-hindi" onclick="selectStyleOption('hindi')">
+                        <span class="card-text">أرقام هندية المناهج العربية (١٢٫٣٤)</span>
+                    </div>
+                    <div class="style-card" id="opt-arabic" onclick="selectStyleOption('arabic')">
+                        <span class="card-text">أرقام عربية للمدارس الدولية (12.34)</span>
+                    </div>
+                </div>
+                
+                <button class="start-btn" onclick="startQuiz()">ابدأ الاختبار الآن 🚀</button>
+            </div>
+
+            <div id="quiz-part" style="display:none;">
+                <div class="top-nav">
+                    <button class="nav-action-btn" onclick="goBackToWelcome()">🏡 الرئيسية</button>
+                    <div id="progress">السؤال ١ من ١٥</div>
+                    <button class="nav-action-btn" onclick="toggleSystemRuntime()">🔄 تغيير النظام</button>
+                </div>
+                
+                <div class="notebook-note">
+                    <span>استخدم دفترك للحل أولاً 📝</span>
+                </div>
+                
+                <div class="math-vertical-container">
+                    <div class="grid-cell f1-cell"></div>
+                    <div class="grid-cell f1-cell" id="f1-tens"></div>
+                    <div class="grid-cell f1-cell" id="f1-ones"></div>
+                    <div class="grid-cell f1-cell decimal-cell" id="f1-dec"></div>
+                    <div class="grid-cell f1-cell" id="f1-tents"></div>
+                    <div class="grid-cell f1-cell" id="f1-hunds"></div>
+                    
+                    <div class="grid-cell sign-cell">+</div>
+                    <div class="grid-cell f2-cell" id="f2-tens"></div>
+                    <div class="grid-cell f2-cell" id="f2-ones"></div>
+                    <div class="grid-cell f2-cell decimal-cell" id="f2-dec"></div>
+                    <div class="grid-cell f2-cell" id="f2-tents"></div>
+                    <div class="grid-cell f2-cell" id="f2-hunds"></div>
+                    
+                    <div class="v-grid-line"></div>
+                    
+                    <div class="input-grid-row">
+                        <input type="text" id="input-answer" class="digit-input" readonly>
+                    </div>
+                </div>
+
+                <div id="hint-area"></div>
+
+                <div class="custom-keyboard" id="keyboard">
+                    <button class="key-btn num-key" onclick="handleKeyPress(1)">1</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(2)">2</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(3)">3</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(4)">4</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(5)">5</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(6)">6</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(7)">7</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(8)">8</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(9)">9</button>
+                    <button class="key-btn key-decimal" id="decimal-btn" onclick="handleDecimalPress()">٫</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(0)">0</button>
+                    <button class="key-btn key-delete" onclick="handleDelete()">⌫</button>
+                    
+                    <button class="key-btn key-submit" style="grid-column: 1 / span 3; margin-top: 5px; height: 55px;" onclick="check()">تسليم الإجابة 📝</button>
+                </div>
+            </div>
+
+            <div id="report" style="display:none;">
+                <h2 style="color: var(--primary); font-size: 2.5rem;">النتيجة النهائية</h2>
+                <div id="final-score" class="final-score-val"></div>
+                <div id="feedback-msg" style="font-size: 1.6rem; margin-bottom: 35px; font-weight: bold;"></div>
+                <button class="restart-btn" onclick="location.reload()">إعادة الاختبار 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let counter = 0, score = 0, isWaiting = false;
+        const totalQuestions = 15;
+        const hindiDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        let currentStyle = 'hindi';
+        let audioCtx = null;
+        let questions = [];
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+        document.body.addEventListener('click', initAudioContext, { once: false });
+
+        function selectStyleOption(style) {
+            currentStyle = style;
+            document.getElementById('opt-hindi').classList.toggle('selected', style === 'hindi');
+            document.getElementById('opt-arabic').classList.toggle('selected', style === 'arabic');
+        }
+
+        function toggleSystemRuntime() {
+            currentStyle = (currentStyle === 'hindi') ? 'arabic' : 'hindi';
+            updateKeyboardStyle();
+            if (document.getElementById('quiz-part').style.display === 'block') {
+                renderCurrentQuestion();
+                const input = document.getElementById('input-answer');
+                if(input.value !== "") {
+                    let cleanRaw = input.value.replace(/[٠-٩]/g, d => hindiDigits.indexOf(d)).replace(/٫/g, '.');
+                    input.value = formatRawToCurrent(cleanRaw);
+                }
+            }
+        }
+
+        function startQuiz() {
+            initAudioContext();
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('quiz-part').style.display = 'block';
+            
+            questions = [];
+            while(questions.length < totalQuestions) {
+                questions.push(generateDecimalQuestion());
+            }
+            updateKeyboardStyle();
+            load();
+        }
+
+        function generateDecimalQuestion() {
+            let f1_int = Math.floor(Math.random() * 89) + 10; 
+            let f2_int = Math.floor(Math.random() * 89) + 10;
+            
+            let f1_dec_type = Math.random() > 0.5 ? 1 : 2;
+            let f2_dec_type = Math.random() > 0.5 ? 1 : 2;
+
+            let f1_frac = f1_dec_type === 1 ? Math.floor(Math.random() * 9 + 1)/10 : Math.floor(Math.random() * 90 + 9)/100;
+            let f2_frac = f2_dec_type === 1 ? Math.floor(Math.random() * 9 + 1)/10 : Math.floor(Math.random() * 90 + 9)/100;
+
+            let f1 = f1_int + f1_frac;
+            let f2 = f2_int + f2_frac;
+            let ans = f1 + f2;
+
+            return { f1, f2, ans };
+        }
+
+        function load() {
+            if (counter >= totalQuestions) { finish(); return; }
+            renderCurrentQuestion();
+            
+            const input = document.getElementById('input-answer');
+            input.value = ""; 
+            input.className = "digit-input";
+            
+            document.getElementById('hint-area').innerHTML = "";
+            document.getElementById('keyboard').style.pointerEvents = 'auto';
+            document.getElementById('keyboard').style.opacity = '1';
+            isWaiting = false;
+        }
+
+        function renderCurrentQuestion() {
+            const q = questions[counter];
+            document.getElementById('progress').innerText = `السؤال ${formatPlainNum(counter+1)} من ${formatPlainNum(totalQuestions)}`;
+            
+            fillFactorCells(q.f1, 'f1');
+            fillFactorCells(q.f2, 'f2');
+        }
+
+        function fillFactorCells(num, prefix) {
+            let parts = num.toFixed(2).split('.');
+            let intPart = parts[0].padStart(2, ' '); 
+            let fracPart = parts[1]; 
+
+            document.getElementById(`${prefix}-tens`).innerText = intPart[0] === ' ' ? '' : formatPlainNum(intPart[0]);
+            document.getElementById(`${prefix}-ones`).innerText = formatPlainNum(intPart[1]);
+            document.getElementById(`${prefix}-dec`).innerText = currentStyle === 'hindi' ? '٫' : '.';
+            document.getElementById(`${prefix}-tents`).innerText = formatPlainNum(fracPart[0]);
+            
+            if (fracPart[1] === '0') {
+                document.getElementById(`${prefix}-hunds`).innerHTML = `<span class="ghost-zero">${formatPlainNum(0)}</span>`;
+            } else {
+                document.getElementById(`${prefix}-hunds`).innerText = formatPlainNum(fracPart[1]);
+            }
+        }
+
+        function formatPlainNum(n) {
+            if (currentStyle === 'hindi') return n.toString().replace(/\d/g, d => hindiDigits[d]);
+            return n.toString();
+        }
+
+        function formatDecimalNum(n) {
+            let s = n.toFixed(2);
+            if (s.endsWith('.00')) s = n.toFixed(0);
+            return formatRawToCurrent(s);
+        }
+
+        function formatRawToCurrent(rawStr) {
+            if (currentStyle === 'hindi') return rawStr.replace(/\d/g, d => hindiDigits[d]).replace(/\./g, '٫');
+            return rawStr;
+        }
+
+        function updateKeyboardStyle() {
+            const keys = document.querySelectorAll('.num-key');
+            keys.forEach(key => {
+                const val = key.getAttribute('onclick').match(/\d/)[0];
+                key.innerText = formatPlainNum(val);
+            });
+            document.getElementById('decimal-btn').innerText = currentStyle === 'hindi' ? '٫' : '.';
+        }
+
+        function handleKeyPress(num) {
+            if (isWaiting) return;
+            const input = document.getElementById('input-answer');
+            if(input.value.length < 9) {
+                input.value += formatPlainNum(num);
+            }
+        }
+
+        function handleDecimalPress() {
+            if (isWaiting) return;
+            const input = document.getElementById('input-answer');
+            const decChar = currentStyle === 'hindi' ? '٫' : '.';
+            if(!input.value.includes(decChar) && input.value.length < 8) {
+                input.value += (input.value === "" ? formatPlainNum(0) : "") + decChar;
+            }
+        }
+
+        function handleDelete() {
+            if (isWaiting) return;
+            const input = document.getElementById('input-answer');
+            if (input.value.length > 0) input.value = input.value.slice(0, -1);
+        }
+
+        function check() {
+            if (isWaiting) return;
+            initAudioContext();
+            
+            const input = document.getElementById('input-answer');
+            let rawInput = input.value.replace(/[٠-٩]/g, d => hindiDigits.indexOf(d)).replace(/٫/g, '.');
+            
+            if (rawInput === "" || rawInput === ".") return;
+            
+            document.getElementById('keyboard').style.pointerEvents = 'none';
+            document.getElementById('keyboard').style.opacity = '0.5';
+
+            const userAns = parseFloat(rawInput);
+            const q = questions[counter];
+
+            if (Math.abs(userAns - q.ans) < 0.015) {
+                score++; playSound('success');
+                input.classList.add('correct-box');
+                speak("رائع! إجابة صحيحة");
+                setTimeout(nextQuest, 1200);
+            } else {
+                playSound('error');
+                input.classList.add('wrong-box');
+                input.value = formatDecimalNum(q.ans); 
+                
+                document.getElementById('hint-area').innerHTML = `
+                    <span class='error-hint'>انتبه لترتيب الخانات! تم عرض الناتج الصحيح في الصندوق.</span>
+                    <button class='continue-btn' onclick='nextQuest()'>المتابعة ➡️</button>
+                `;
+                isWaiting = true;
+            }
+        }
+
+        function nextQuest() { counter++; load(); }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            
+            if (type === 'success') {
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.25);
+            } else {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(150, now);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.2);
+            }
+        }
+
+        function speak(txt) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const m = new SpeechSynthesisUtterance(txt);
+                m.lang = 'ar-SA';
+                window.speechSynthesis.speak(m);
+            }
+        }
+
+        function goBackToWelcome() {
+            counter = 0; score = 0; isWaiting = false;
+            document.getElementById('quiz-part').style.display = 'none';
+            document.getElementById('report').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'block';
+        }
+
+        function finish() {
+            document.getElementById('quiz-part').style.display = 'none';
+            document.getElementById('report').style.display = 'block';
+            const p = Math.round((score / totalQuestions) * 100);
+            document.getElementById('final-score').innerText = `%${formatPlainNum(p)}`;
+            document.getElementById('final-score').style.color = p >= 90 ? "var(--success)" : "var(--error)";
+            
+            let msg = p >= 95 ? "ممتاز يا بطل! لقد أتقنت جمع الأعداد العشرية ومحاذاة الفواصل ببراعة." : "تحتاج إلى التدرب أكثر على محاذاة الفواصل العشرية، أعد المحاولة لتصبح أقوى!";
+            document.getElementById('feedback-msg').innerText = msg;
+            speak(msg);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(document.getElementById('quiz-part').style.display === 'none') return;
+            if(isWaiting) { if(e.key === 'Enter') nextQuest(); return; }
+            if (e.key >= '0' && e.key <= '9') handleKeyPress(parseInt(e.key));
+            else if (e.key === '.' || e.key === ',') handleDecimalPress();
+            else if (e.key === 'Backspace') handleDelete();
+            else if (e.key === 'Enter') check();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>منصة الأستاذ أحمد أبو جبل التعليمية - ضرب الأعداد الكسرية</title>
+    <style>
+        :root { 
+            --sand-bg: #F5F5DC; 
+            --gold-primary: #d4af37;
+            --gold-dark: #aa841b;
+            --primary: #2c3e50; 
+            --error: #e74c3c; 
+            --success: #27ae60; 
+            --factor1-color: #2980b9; 
+            --factor2-color: #e67e22; 
+            --gold-wm: rgba(212, 175, 55, 0.25); 
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--sand-bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            min-height: 100dvh;
+            margin: 0; 
+            padding: 8px; 
+            overflow: hidden; 
+        }
+        
+        .app-container { 
+            width: 100%; 
+            max-width: 520px; 
+            background: #ffffff; 
+            padding: 20px 15px; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
+            text-align: center; 
+            border: 8px solid var(--primary); 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            height: 96vh; 
+            height: 96dvh;
+            overflow: hidden; 
+        }
+
+        .islamic-pattern {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle, rgba(212,175,55,0.05) 2px, transparent 4px);
+            background-size: 25px 25px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .blinking-watermark {
+            position: absolute;
+            top: 52%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.2rem; font-weight: 900;
+            color: rgba(212, 175, 55, 0.06);
+            white-space: nowrap; z-index: 1; pointer-events: none;
+            animation: slowBlink 4s infinite ease-in-out;
+        }
+
+        @keyframes slowBlink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .side-watermark {
+            position: absolute; top: 0; bottom: 0; width: 35px;
+            display: flex; flex-direction: column; justify-content: space-around;
+            align-items: center; font-size: 1rem; font-weight: 900; 
+            color: var(--gold-wm); pointer-events: none; z-index: 1;
+        }
+        .wm-left { left: 2px; } .wm-right { right: 2px; }
+        .wm-text { transform: rotate(-90deg); white-space: nowrap; margin: 20px 0; }
+
+        .quiz-content { position: relative; z-index: 3; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+
+        #welcome-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; }
+
+        .skill-title { color: var(--primary); font-size: clamp(1.4rem, 5.2vw, 2.1rem); font-weight: 900; margin-bottom: 5px; }
+        .skill-subtitle { color: var(--gold-dark); font-size: clamp(1.1rem, 4vw, 1.3rem); font-weight: bold; margin-bottom: 40px; }
+
+        .style-cards { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 340px; }
+        .style-card { background: #fff; border: 3px solid var(--gold-primary); border-radius: 20px; padding: 20px 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 12px rgba(0,0,0,0.05); transition: all 0.2s ease; }
+        .style-card:active { transform: scale(0.96); background: #fcfbf2; }
+        .card-text { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+
+        .top-nav { display: flex; justify-content: space-between; align-items: center; width: 100%; height: 40px; }
+        #progress { font-size: 1.2rem; font-weight: bold; color: #7f8c8d; }
+        .nav-action-btn { background: #fff; border: 2px solid var(--gold-primary); color: var(--gold-dark); padding: 5px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; cursor: pointer; }
+
+        .notebook-note {
+            background-color: #fffde7;
+            border: 2px dashed var(--gold-primary);
+            color: #795548;
+            padding: 6px 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            margin: 4px auto;
+            width: fit-content;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .math-horizontal-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: auto;
+            width: 100%;
+        }
+
+        .input-row-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 3vw, 16px);
+            font-size: clamp(1.8rem, 6vw, 2.6rem);
+            font-weight: 900;
+            color: var(--primary);
+            direction: rtl; 
+        }
+
+        .mixed-number-box {
+            display: flex;
+            flex-direction: row; 
+            align-items: center;
+            gap: 6px;
+            direction: ltr; 
+        }
+
+        .m-whole { 
+            font-size: clamp(2.2rem, 7vw, 3.2rem); 
+            font-weight: 900;
+            order: 1; 
+        }
+
+        .fraction-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+            line-height: 1;
+            order: 2; 
+        }
+        
+        .m-factor1 { color: var(--factor1-color); }
+        .m-factor2 { color: var(--factor2-color); }
+
+        .fraction-line {
+            width: 110%;
+            height: 3.5px;
+            background-color: currentColor;
+            margin: 4px 0;
+            border-radius: 2px;
+        }
+
+        .math-sign {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .output-row-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 20px;
+            border: 2px dashed #dcdde1;
+            min-height: 95px;
+        }
+
+        .output-label {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--gold-dark);
+            margin-right: 5px;
+        }
+
+        .answer-container {
+            display: flex;
+            flex-direction: row-reverse; 
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-box-field {
+            width: 55px;
+            height: 55px;
+            border: 3.5px solid var(--primary);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: var(--primary);
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-box-field.active-focus {
+            border-color: var(--gold-primary);
+            background: #fffdf3;
+        }
+
+        .input-box-field.whole-field {
+            width: 65px;
+            height: 65px;
+            font-size: 2rem;
+        }
+
+        .fraction-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .frac-input-line {
+            width: 55px;
+            height: 4px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .correct-style { background: #e8f5e9 !important; border-color: var(--success) !important; color: var(--success) !important; }
+        .wrong-style { background: #ffebee !important; border-color: var(--error) !important; color: var(--error) !important; }
+
+        .custom-keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 5px auto 0 auto;
+            max-width: 320px;
+            width: 100%;
+            direction: ltr;
+        }
+
+        .key-btn {
+            background: var(--primary); color: white; font-size: 1.6rem; font-weight: bold;
+            border: none; border-radius: 12px; padding: 10px 0; cursor: pointer;
+            box-shadow: 0 4px 0 #1a252f;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .key-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1a252f; }
+        .key-decimal { background: #34495e; font-size: 1.3rem; }
+        .key-delete { background: var(--error); box-shadow: 0 4px 0 #c0392b; font-size: 1.3rem; }
+        
+        .key-submit { 
+            background: var(--success); 
+            box-shadow: 0 4px 0 #1e7e34; 
+            font-size: 1.3rem;
+            grid-column: 1 / span 3;
+            height: 48px;
+            margin-top: 2px;
+        }
+        .key-submit:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e7e34; }
+
+        /* تنسيقات صفحة الشرح التفصيلية المحدثة */
+        #explanation-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            padding: 5px 10px;
+            z-index: 10;
+        }
+
+        .exp-header {
+            color: var(--error);
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .exp-scroll-area {
+            width: 100%;
+            background: #fdfefe;
+            border: 2px dashed var(--gold-primary);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: right;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+            margin-bottom: 15px;
+        }
+
+        .exp-step {
+            margin-bottom: 14px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #34495e;
+            border-bottom: 1px dashed #eaeded;
+            padding-bottom: 8px;
+        }
+        .exp-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .exp-step-title {
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        /* تنسيق الكسور داخل الشرح لتبدو احترافية وبسط ومقام */
+        .inline-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            line-height: 1;
+            padding: 0 4px;
+            font-weight: bold;
+        }
+        .inline-fraction .f-line {
+            width: 100%;
+            height: 2px;
+            background: currentColor;
+            margin: 2px 0;
+        }
+
+        .inline-mixed {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-weight: bold;
+            direction: ltr;
+        }
+
+        .understand-btn {
+            background: var(--success);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 280px;
+            padding: 12px 0;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1e7e34;
+            transition: all 0.1s ease;
+        }
+        .understand-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e7e34; }
+
+        #report { padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .final-score-val { font-size: 4rem; font-weight: 900; margin: 10px 0; }
+        .restart-btn { width: 100%; max-width: 300px; padding: 15px; font-size: 1.3rem; font-weight: bold; background: var(--primary); color: white; border: none; border-radius: 18px; cursor: pointer; }
+
+        @media (max-height: 670px) {
+            .app-container { padding: 12px 10px; border-width: 5px; }
+            .skill-subtitle { margin-bottom: 15px; }
+            .style-card { padding: 14px 10px; }
+            .math-horizontal-layout { gap: 8px; }
+            .output-row-display { padding: 6px 12px; min-height: 75px; }
+            .input-box-field { width: 44px; height: 44px; font-size: 1.3rem; border-width: 2.5px; border-radius: 8px; }
+            .input-box-field.whole-field { width: 52px; height: 52px; font-size: 1.6rem; }
+            .frac-input-line { width: 44px; }
+            .custom-keyboard { gap: 6px; max-width: 270px; }
+            .key-btn { padding: 6px 0; font-size: 1.4rem; border-radius: 8px; }
+            .key-submit { height: 40px; font-size: 1.1rem; }
+            .notebook-note { font-size: 0.85rem; padding: 4px 10px; }
+            .exp-step { font-size: 0.95rem; margin-bottom: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="islamic-pattern"></div>
+        <div class="blinking-watermark">أحمد فتحي أبو جبل</div>
+
+        <div class="side-watermark wm-left">
+            <div class="wm-text">أحمد فتحي أبو جبل</div><div class="wm-text">أحمد فتحي أبو جبل</div>
+        </div>
+        <div class="side-watermark wm-right">
+            <div class="wm-text">أحمد فتحي أبو جبل</div><div class="wm-text">أحمد فتحي أبو جبل</div>
+        </div>
+
+        <div class="quiz-content">
+            <div id="welcome-screen">
+                <div class="skill-title">ضرب الأعداد الكسرية</div>
+                <div class="skill-subtitle">منصة الأستاذ أحمد أبو جبل التعليمية</div>
+                
+                <div class="style-cards">
+                    <div class="style-card" onclick="selectStyleAndStart('hindi')">
+                        <span class="card-text">أرقام هندية المناهج العربية (١/٤  ٢)</span>
+                    </div>
+                    <div class="style-card" onclick="selectStyleAndStart('arabic')">
+                        <span class="card-text">أرقام عربية للمدارس الدولية (1/4  2)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-part" style="display:none;">
+                <div class="top-nav">
+                    <button class="nav-action-btn" onclick="goBackToWelcome()">🏡 الرئيسية</button>
+                    <div id="progress">السؤال ١ من ١٥</div>
+                    <button class="nav-action-btn" onclick="toggleSystemRuntime()">🔄 تغيير النظام</button>
+                </div>
+                
+                <div class="notebook-note">
+                    <span>حل في دفترك أولاً 📝 ثم أدخل الناتج النهائي في أبسط صورة</span>
+                </div>
+
+                <div class="math-horizontal-layout">
+                    <div class="input-row-display">
+                        <div class="mixed-number-box m-factor1">
+                            <div class="fraction-box">
+                                <span id="m1-num">1</span>
+                                <div class="fraction-line"></div>
+                                <span id="m1-den">2</span>
+                            </div>
+                            <span class="m-whole" id="m1-whole">1</span>
+                        </div>
+
+                        <span class="math-sign">×</span>
+
+                        <div class="mixed-number-box m-factor2">
+                            <div class="fraction-box">
+                                <span id="m2-num">1</span>
+                                <div class="fraction-line"></div>
+                                <span id="m2-den">3</span>
+                            </div>
+                            <span class="m-whole" id="m2-whole">1</span>
+                        </div>
+
+                        <span class="math-sign">=</span>
+                    </div>
+                    
+                    <div class="output-row-display">
+                        <div class="answer-container">
+                            <input type="text" id="ans-whole" class="input-box-field whole-field" readonly onclick="setActiveField('whole')" placeholder="؟">
+                            
+                            <div class="fraction-input-group" id="frac-inputs-wrapper">
+                                <input type="text" id="ans-num" class="input-box-field" readonly onclick="setActiveField('num')" placeholder="بسط">
+                                <div class="frac-input-line"></div>
+                                <input type="text" id="ans-den" class="input-box-field" readonly onclick="setActiveField('den')" placeholder="مقام">
+                            </div>
+                        </div>
+                        <span class="output-label">:الناتج</span>
+                    </div>
+                </div>
+
+                <div style="min-height: 10px;"></div>
+
+                <div class="custom-keyboard" id="keyboard">
+                    <button class="key-btn num-key" onclick="handleKeyPress(1)">1</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(2)">2</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(3)">3</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(4)">4</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(5)">5</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(6)">6</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(7)">7</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(8)">8</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(9)">9</button>
+                    <button class="key-btn key-decimal" id="slash-btn" onclick="handleSlashPress()">التالي ↩</button>
+                    <button class="key-btn num-key" onclick="handleKeyPress(0)">0</button>
+                    <button class="key-btn key-delete" onclick="handleDelete()">⌫</button>
+                    
+                    <button class="key-btn key-submit" onclick="check()">تسليم الإجابة 📝</button>
+                </div>
+            </div>
+
+            <div id="explanation-screen" style="display: none;">
+                <div class="exp-header">❌ تحتاج إلى مراجعة طريقة الحل</div>
+                <div class="exp-scroll-area" id="explanation-content">
+                    </div>
+                <button class="understand-btn" onclick="nextQuest()">فهمت الخطوات ↩</button>
+            </div>
+
+            <div id="report" style="display:none;">
+                <h2 style="color: var(--primary); font-size: 2.2rem; margin:0;">النتيجة الختامية</h2>
+                <div id="final-score" class="final-score-val"></div>
+                <div id="feedback-msg" style="font-size: 1.4rem; margin-bottom: 25px; font-weight: bold; padding:0 10px;"></div>
+                <button class="restart-btn" onclick="location.reload()">إعادة الاختبار 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let counter = 0, score = 0, isWaiting = false;
+        const totalQuestions = 15;
+        const hindiDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        let currentStyle = 'hindi';
+        let audioCtx = null;
+        let questions = [];
+        let activeField = 'whole';
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+        document.body.addEventListener('click', initAudioContext, { once: false });
+
+        function selectStyleAndStart(style) {
+            currentStyle = style;
+            initAudioContext();
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('quiz-part').style.display = 'block';
+            
+            questions = [];
+            while(questions.length < totalQuestions) {
+                questions.push(generateMiddlingMixedQuestion());
+            }
+            updateKeyboardStyle();
+            load();
+        }
+
+        function toggleSystemRuntime() {
+            currentStyle = (currentStyle === 'hindi') ? 'arabic' : 'hindi';
+            updateKeyboardStyle();
+            if (document.getElementById('quiz-part').style.display === 'block') {
+                renderCurrentQuestion();
+                ['ans-whole', 'ans-num', 'ans-den'].forEach(id => {
+                    let field = document.getElementById(id);
+                    if(field.value !== "") {
+                        let clean = field.value.replace(/[٠-٩]/g, d => hindiDigits.indexOf(d));
+                        field.value = formatPlainNum(parseInt(clean));
+                    }
+                });
+            }
+        }
+
+        function generateMiddlingMixedQuestion() {
+            const basicDenominators = [2, 3, 4, 5]; 
+            
+            let d1 = basicDenominators[Math.floor(Math.random() * basicDenominators.length)];
+            let d2 = basicDenominators[Math.floor(Math.random() * basicDenominators.length)];
+            
+            let n1 = Math.floor(Math.random() * (d1 - 1)) + 1;
+            let n2 = Math.floor(Math.random() * (d2 - 1)) + 1;
+            
+            let w1 = Math.floor(Math.random() * 2) + 1;
+            let w2 = Math.floor(Math.random() * 2) + 1;
+            
+            let totalImproperNum1 = (w1 * d1) + n1;
+            let totalImproperNum2 = (w2 * d2) + n2;
+            
+            let rawNumerator = totalImproperNum1 * totalImproperNum2;
+            let rawDenominator = d1 * d2;
+
+            let gcd = (a, b) => b ? gcd(b, a % b) : a;
+            let initialGcd = gcd(rawNumerator, rawDenominator);
+            
+            let finalNumerator = rawNumerator / initialGcd;
+            let finalDenominator = rawDenominator / initialGcd;
+
+            let modelWhole = Math.floor(finalNumerator / finalDenominator);
+            let modelNum = finalNumerator % finalDenominator;
+            let modelDen = finalDenominator;
+
+            let isWhole = (modelNum === 0);
+
+            return {
+                w1: w1, n1: n1, d1: d1,
+                w2: w2, n2: n2, d2: d2,
+                impN1: totalImproperNum1, impD1: d1,
+                impN2: totalImproperNum2, impD2: d2,
+                rawN: rawNumerator, rawD: rawDenominator,
+                reductionGcd: initialGcd,
+                correctWhole: modelWhole,
+                correctNum: modelNum,
+                correctDen: isWhole ? 1 : modelDen,
+                isWholeResult: isWhole
+            };
+        }
+
+        function load() {
+            if (counter >= totalQuestions) { finish(); return; }
+            
+            document.getElementById('explanation-screen').style.display = 'none';
+            document.getElementById('quiz-part').style.display = 'block';
+
+            const q = questions[counter];
+            renderCurrentQuestion();
+            
+            ['ans-whole', 'ans-num', 'ans-den'].forEach(id => {
+                let el = document.getElementById(id);
+                el.value = "";
+                el.className = el.id === 'ans-whole' ? "input-box-field whole-field" : "input-box-field";
+            });
+
+            const fracWrapper = document.getElementById('frac-inputs-wrapper');
+            if (q.isWholeResult) {
+                fracWrapper.style.display = 'none'; 
+                setActiveField('whole');
+            } else {
+                fracWrapper.style.display = 'flex'; 
+                setActiveField('whole');
+            }
+
+            document.getElementById('keyboard').style.pointerEvents = 'auto';
+            document.getElementById('keyboard').style.opacity = '1';
+            isWaiting = false;
+        }
+
+        function renderCurrentQuestion() {
+            const q = questions[counter];
+            document.getElementById('progress').innerText = `السؤال ${formatPlainNum(counter+1)} من ${formatPlainNum(totalQuestions)}`;
+            
+            document.getElementById('m1-whole').innerText = formatPlainNum(q.w1);
+            document.getElementById('m1-num').innerText = formatPlainNum(q.n1);
+            document.getElementById('m1-den').innerText = formatPlainNum(q.d1);
+            
+            document.getElementById('m2-whole').innerText = formatPlainNum(q.w2);
+            document.getElementById('m2-num').innerText = formatPlainNum(q.n2);
+            document.getElementById('m2-den').innerText = formatPlainNum(q.d2);
+        }
+
+        function setActiveField(fieldType) {
+            if (isWaiting) return;
+            activeField = fieldType;
+            ['ans-whole', 'ans-num', 'ans-den'].forEach(id => {
+                document.getElementById(id).classList.remove('active-focus');
+            });
+            
+            const currentEl = document.getElementById(`ans-${fieldType}`);
+            if (currentEl) currentEl.classList.add('active-focus');
+        }
+
+        function formatPlainNum(n) {
+            if (currentStyle === 'hindi') return n.toString().replace(/\d/g, d => hindiDigits[d]);
+            return n.toString();
+        }
+
+        function createHTMLFraction(num, den) {
+            return `<span class="inline-fraction"><span>${formatPlainNum(num)}</span><div class="f-line"></div><span>${formatPlainNum(den)}</span></span>`;
+        }
+
+        function createHTMLMixed(whole, num, den) {
+            if (num === 0) return `<span class="inline-mixed"><span>${formatPlainNum(whole)}</span></span>`;
+            return `<span class="inline-mixed">${createHTMLFraction(num, den)}<span>${formatPlainNum(whole)}</span></span>`;
+        }
+
+        function updateKeyboardStyle() {
+            const keys = document.querySelectorAll('.num-key');
+            keys.forEach(key => {
+                const val = key.getAttribute('onclick').match(/\d/)[0];
+                key.innerText = formatPlainNum(val);
+            });
+        }
+
+        function handleKeyPress(num) {
+            if (isWaiting) return;
+            const input = document.getElementById(`ans-${activeField}`);
+            if (input && input.value.length < 3) {
+                input.value += formatPlainNum(num);
+            }
+        }
+
+        function handleSlashPress() {
+            if (isWaiting) return;
+            const q = questions[counter];
+            if (q.isWholeResult) return;
+
+            if (activeField === 'whole') setActiveField('num');
+            else if (activeField === 'num') setActiveField('den');
+            else setActiveField('whole');
+        }
+
+        function handleDelete() {
+            if (isWaiting) return;
+            const input = document.getElementById(`ans-${activeField}`);
+            if (input && input.value.length > 0) {
+                input.value = input.value.slice(0, -1);
+            }
+        }
+
+        function check() {
+            if (isWaiting) return;
+            initAudioContext();
+
+            const q = questions[counter];
+            
+            let wRaw = document.getElementById('ans-whole').value.replace(/[٠-٩]/g, d => hindiDigits.indexOf(d));
+            let nRaw = document.getElementById('ans-num').value.replace(/[٠-٩]/g, d => hindiDigits.indexOf(d));
+            let dRaw = document.getElementById('ans-den').value.replace(/[٠-٩]/g, d => hindiDigits.indexOf(d));
+
+            let userWhole = wRaw === "" ? 0 : parseInt(wRaw);
+            let userNum = nRaw === "" ? 0 : parseInt(nRaw);
+            let userDen = dRaw === "" ? 1 : parseInt(dRaw);
+
+            if (q.isWholeResult && wRaw === "") return;
+            if (!q.isWholeResult && (wRaw === "" || nRaw === "" || dRaw === "")) return;
+            if (userDen === 0) return; 
+
+            document.getElementById('keyboard').style.pointerEvents = 'none';
+            document.getElementById('keyboard').style.opacity = '0.5';
+
+            let isCorrect = false;
+            if (q.isWholeResult) {
+                isCorrect = (userWhole === q.correctWhole && userNum === 0);
+            } else {
+                let userVal = userWhole + (userNum / userDen);
+                let targetVal = q.correctWhole + (q.correctNum / q.correctDen);
+                isCorrect = (Math.abs(userVal - targetVal) < 0.005 && userNum < userDen && userNum === q.correctNum && userDen === q.correctDen);
+            }
+
+            if (isCorrect) {
+                score++; playSound('success');
+                ['ans-whole', 'ans-num', 'ans-den'].forEach(id => document.getElementById(id).classList.add('correct-style'));
+                speak("رائع! إجابة ممتازة");
+                setTimeout(nextQuest, 1200);
+            } else {
+                playSound('error');
+                ['ans-whole', 'ans-num', 'ans-den'].forEach(id => document.getElementById(id).classList.add('wrong-style'));
+                speak("انتبه لخطوات الحل الصحيحة");
+                setTimeout(() => { buildAndShowExplanation(q); }, 1000);
+            }
+        }
+
+        function buildAndShowExplanation(q) {
+            let html = "";
+            
+            // الخطوة 1: تحويل الأعداد الكسرية لكسور
+            html += `
+                <div class="exp-step">
+                    <span class="exp-step-title">الخطوة ١: تحويل الأعداد الكسرية إلى كسور (بسط ومقام)</span>
+                    نحول العدد الكسري الأول: ${createHTMLMixed(q.w1, q.n1, q.d1)} يصبح ${createHTMLFraction(q.impN1, q.impD1)} <br>
+                    نحول العدد الكسري الثاني: ${createHTMLMixed(q.w2, q.n2, q.d2)} يصبح ${createHTMLFraction(q.impN2, q.impD2)}
+                </div>
+            `;
+
+            // الخطوة 2: الضرب المباشر
+            html += `
+                <div class="exp-step">
+                    <span class="exp-step-title">الخطوة ٢: نضرب البسط في البسط والمقام في المقام</span>
+                    البسط الجديد = ${formatPlainNum(q.impN1)} × ${formatPlainNum(q.impN2)} = **${formatPlainNum(q.rawN)}** <br>
+                    المقام الجديد = ${formatPlainNum(q.impD1)} × ${formatPlainNum(q.impD2)} = **${formatPlainNum(q.rawD)}** <br>
+                    الكسر الناتج قبل التبسيط هو: ${createHTMLFraction(q.rawN, q.rawD)}
+                </div>
+            `;
+
+            // الخطوة 3: التبسيط بالقسمة
+            if (q.reductionGcd > 1) {
+                html += `
+                    <div class="exp-step">
+                        <span class="exp-step-title">الخطوة ٣: التبسيط بقسمة البسط والمقام على (${formatPlainNum(q.reductionGcd)})</span>
+                        نقسم البسط والمقام على القاسم المشترك الأكبر وهو الحرف المتناغم (${formatPlainNum(q.reductionGcd)}): <br>
+                        ${formatPlainNum(q.rawN)} ÷ ${formatPlainNum(q.reductionGcd)} = **${formatPlainNum(q.rawN / q.reductionGcd)}** <br>
+                        ${formatPlainNum(q.rawD)} ÷ ${formatPlainNum(q.reductionGcd)} = **${formatPlainNum(q.rawD / q.reductionGcd)}** <br>
+                        الكسر المبسط يصبح: ${createHTMLFraction(q.rawN / q.reductionGcd, q.rawD / q.reductionGcd)}
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="exp-step">
+                        <span class="exp-step-title">الخطوة ٣: التبسيط</span>
+                        الكسر في أبسط صورة بالفعل ولا يمكن قسمته على أي رقم مشترك.
+                    </div>
+                `;
+            }
+
+            // الخطوة 4: الناتج النهائي المقارن
+            let finalRepresentation = q.isWholeResult ? 
+                `**${formatPlainNum(q.correctWhole)}** (عدد صحيح)` : 
+                `${createHTMLMixed(q.correctWhole, q.correctNum, q.correctDen)}`;
+
+            html += `
+                <div class="exp-step" style="background: #fdfefe; border: 2px solid var(--success); padding: 8px; border-radius: 8px;">
+                    <span class="exp-step-title" style="color: var(--success);">الناتج النهائي  في أبسط صورة:</span>
+                    الجواب الصحيح والدقيق هو: ${finalRepresentation}
+                </div>
+            `;
+
+            document.getElementById('explanation-content').innerHTML = html;
+            document.getElementById('quiz-part').style.display = 'none';
+            document.getElementById('explanation-screen').style.display = 'flex';
+        }
+
+        function nextQuest() { 
+            counter++; 
+            load(); 
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            
+            if (type === 'success') {
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.25);
+            } else {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(150, now);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.2);
+            }
+        }
+
+        function speak(txt) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const m = new SpeechSynthesisUtterance(txt);
+                m.lang = 'ar-SA';
+                window.speechSynthesis.speak(m);
+            }
+        }
+
+        function goBackToWelcome() {
+            counter = 0; score = 0; isWaiting = false;
+            document.getElementById('quiz-part').style.display = 'none';
+            document.getElementById('explanation-screen').style.display = 'none';
+            document.getElementById('report').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'block';
+        }
+
+        function finish() {
+            document.getElementById('quiz-part').style.display = 'none';
+            document.getElementById('explanation-screen').style.display = 'none';
+            document.getElementById('report').style.display = 'flex';
+            const p = Math.round((score / totalQuestions) * 100);
+            document.getElementById('final-score').innerText = `%${formatPlainNum(p)}`;
+            document.getElementById('final-score').style.color = p >= 90 ? "var(--success)" : "var(--error)";
+            
+            let msg = p >= 90 ? "أنت رائع ومتميز! لقد أتقنت ضرب الأعداد الكسرية بامتياز." : "محاولة جيدة، يمكنك إعادة الاختبار لرفع مستواك وتصبح أقوى!";
+            document.getElementById('feedback-msg').innerText = msg;
+            speak(msg);
+        }
+    </script>
+</body>
+</html>
